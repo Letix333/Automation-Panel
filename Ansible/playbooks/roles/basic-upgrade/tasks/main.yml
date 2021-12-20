@@ -1,0 +1,19 @@
+---
+
+- name: Doing a safe upgrade of packages on system
+  block:
+  - name: update cache
+    apt:
+      update_cache: yes
+    changed_when: false
+
+  - name: Perform upgrade
+    apt:
+      upgrade: safe
+  - name: Automatic removing of no longer required packages
+    apt:
+      autoremove: yes
+
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes
