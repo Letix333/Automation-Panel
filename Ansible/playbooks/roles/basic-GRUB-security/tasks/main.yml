@@ -1,0 +1,70 @@
+---
+- block:
+
+  - name: Find grub-mkconfig linux files
+    find:
+      paths: /etc/grub.d/
+      patterns: "*linux*"
+    register: grubd_linux
+
+  - name: Find grub-mkconfig prober files
+    find:
+      paths: /etc/grub.d/
+      patterns: "*prober*"
+    register: grubd_prober
+
+  - name: Find grub-mkconfig header files
+    find:
+      paths: /etc/grub.d/
+      patterns: "*header*"
+    register: grubd_header
+
+
+  - name: Add "--unrestricted" option to Linux related GRUB helpers
+    replace:
+      path: "{{item}}"
+      regexp: '(--class os)(( *--unrestricted)*)'
+      replace: '\1 --unrestricted'
+    with_list: "{{ grubd_linux.files | map(attribute='path') | list() }}"
+    notify: ubuntu-grub-mkconfig
+
+  - name: Add "--unrestricted" option to other OS related GRUB helpers
+    replace:
+      path: "{{item}}"
+      regexp: '((--unrestricted *)*)(--class os )'
+      replace: '--unrestricted \3'
+    with_list: "{{ grubd_prober.files | map(attribute='path') | list() }}"
+    notify: ubuntu-grub-mkconfig
+
+  - name: Putting the superuser name into header helper
+    lineinfile:
+      dest: "{{item}}"
+      line: 'echo set superusers="root"'
+    with_list: "{{ grubd_header.files | map(attribute='path') | list() }}"
+    notify: ubuntu-grub-mkconfig
+
+  - name: Put the hashed password into header section
+    lineinfile:
+      dest: "{{item}}"
+      line: "echo password_pbkdf2 root {{ grub_password_hash }}"
+    with_list: "{{ grubd_header.files | map(attribute='path') | list() }}"
+    notify: ubuntu-grub-mkconfig
+
+  - name: Disabling Recovery option to prevent root access
+    lineinfile:
+      dest: /etc/default/grub
+      line: 'GRUB_DISABLE_RECOVERY="true"'
+    notify: ubuntu-grub-mkconfig
+
+  - name: Fixing permissions
+    file:
+      path: "{{item}}"
+      mode: 0700
+    with_list: "{{ grubd_header.files | map(attribute='path') | list() }}"
+    notify: ubuntu-grub-mkconfig
+
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_architecture not in ["aarch64", "armv7l"]
+  become: yes
+

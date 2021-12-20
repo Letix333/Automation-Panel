@@ -1,0 +1,6 @@
+---
+- name: ubuntu-grub-mkconfig
+  shell: "/usr/sbin/grub-mkconfig -o {{ grub_cfg_path_debian }}"
+  when: ansible_os_family == "Debian"
+  become: yes
+
