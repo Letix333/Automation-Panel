@@ -1,0 +1,38 @@
+---
+
+- block: 
+
+  - name: copy sources.list formed from template 
+    template:
+      src: "sources.list.j2"
+      dest: '/etc/apt/sources.list'
+      owner: root
+      group: root
+      mode: 0644
+    when: ansible_os_family == "Debian"
+
+  - name: clean local package repository
+    command: "apt-get clean"
+    args:
+      warn: false
+    changed_when: false
+
+  - name: Finding possible APT proxy files
+    find:
+      paths: /etc/apt/apt.conf.d
+      contains: "(?i).*proxy.*"
+    register: proxyconf
+
+  - name: Correcting proxy settings
+    replace:
+      path: "{{ item }}"
+      regexp: 'my_old_proxy:80'
+      replace: 'my-company.proxy.com:8080'
+    with_list: "{{proxyconf.files | map(attribute='path') | list() }}"
+
+  - name: Update package information
+    apt:
+      update_cache: yes
+    changed_when: false
+
+  become: yes

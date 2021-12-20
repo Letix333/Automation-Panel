@@ -1,0 +1,12 @@
+# ansible managed sources.list
+
+deb {{repo_arch}} http://pl.archive.ubuntu.com/ubuntu/ {{ansible_distribution_release}} main restricted
+deb {{repo_arch}} http://pl.archive.ubuntu.com/ubuntu/ {{ansible_distribution_release}}-updates main restricted
+deb {{repo_arch}} http://pl.archive.ubuntu.com/ubuntu/ {{ansible_distribution_release}} universe
+deb {{repo_arch}} http://pl.archive.ubuntu.com/ubuntu/ {{ansible_distribution_release}}-updates universe
+deb {{repo_arch}} http://pl.archive.ubuntu.com/ubuntu/ {{ansible_distribution_release}} multiverse
+deb {{repo_arch}} http://pl.archive.ubuntu.com/ubuntu/ {{ansible_distribution_release}}-updates multiverse
+deb {{repo_arch}} http://pl.archive.ubuntu.com/ubuntu/ {{ansible_distribution_release}}-backports main restricted universe multiverse
+deb {{repo_arch}} http://security.ubuntu.com/ubuntu focal-security main restricted
+deb {{repo_arch}} http://security.ubuntu.com/ubuntu focal-security universe
+deb {{repo_arch}} http://security.ubuntu.com/ubuntu focal-security multiverse

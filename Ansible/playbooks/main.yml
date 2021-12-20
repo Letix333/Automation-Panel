@@ -3,4 +3,5 @@
 - hosts: standard
   force_handlers: true
   roles:
+    - basic-repo
     - basic-unattended-upgrades
