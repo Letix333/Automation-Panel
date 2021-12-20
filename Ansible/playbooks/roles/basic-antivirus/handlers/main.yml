@@ -1,0 +1,37 @@
+---
+# handlers file for antivirus
+- name: freshclam_config
+  replace:
+    path: /etc/clamav/freshclam.conf
+    backup: yes
+    regexp: ".*NotifyClamd.*"
+    replace: '# NotifyClamd = no'
+  become: yes
+
+- name: freshclam_restart
+  service:
+    name: clamav-freshclam
+    state: restarted
+  become: yes
+
+- name: restrict_mail
+  file:
+    path: /usr/bin/s-nail
+    mode: 0750
+    group: service
+  become: yes
+    
+- name: ssmtp_update
+  replace:
+    path: /etc/ssmtp/ssmtp.conf
+    backup: yes
+    regexp: ".*mailhub=.*"
+    replace: "mailhub=192.101.48.59"
+  become: yes
+
+- name: cron_restart
+  service:
+    name: cron
+    state: restarted
+  become: yes
+

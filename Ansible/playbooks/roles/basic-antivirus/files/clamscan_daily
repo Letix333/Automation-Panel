@@ -1,0 +1,43 @@
+#!/bin/bash
+# copyleft free software
+#
+MACHINE=$(hostname -s)
+FQDN=$(hostname)
+LOGFILE="/var/log/clamav/clamav-$(date +'%Y-%m-%d').log"
+EMAIL_MSG="Found malware on $FQDN. Please see the log file attached."
+# EMAIL_FROM="clamav-daily@example.com";
+EMAIL_TO="bartlomiej.olczyk@protonmail.com"
+DIRTOSCAN="/home"
+
+# Update ClamAV database
+# echo "Looking for ClamAV database updates...";
+freshclam --quiet;
+
+TODAY=$(date +%u);
+
+if [ "$TODAY" -eq "5" ]; then
+ echo "Starting a full weekly scan.";
+
+ excludes=`findmnt -t nfs,nfs4,cifs -o target -l -n | sed "s#^\(.*\)#--exclude-dir '^\1/'#"`
+ # be nice to others while scanning the entire root
+ eval nice -n5 clamscan -ri / --exclude-dir="^/(sys|proc|dev)/" $excludes &>"$LOGFILE";
+else
+ DIRSIZE=$(du -sh "$DIRTOSCAN" 2>/dev/null | cut -f1);
+
+ echo "Starting a daily scan of "$DIRTOSCAN" directory.
+ Amount of data to be scanned is "$DIRSIZE".";
+
+ clamscan -ri "$DIRTOSCAN" &>"$LOGFILE";
+fi
+
+# get the value of "Infected lines" 
+MALWARE=$(tail "$LOGFILE"|grep Infected|cut -d" " -f3); 
+
+# if the value is not equal to zero, send an email with the log file attached 
+if [ "$MALWARE" != "0" ]; then 
+  #using heirloom-mailx below 
+  echo "$EMAIL_MSG"|s-nail -a "$LOGFILE" -s "Malware Found on $MACHINE" "$EMAIL_TO";
+#  echo "E-mail sent"
+fi 
+exit 0
+

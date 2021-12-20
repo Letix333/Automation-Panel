@@ -1,0 +1,64 @@
+---
+# tasks file for antivirus
+- name: Installing system equipment packages
+  block:
+
+    - name: Packages installation
+      apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: no
+      vars:
+        packages:
+        - clamtk
+        - ssmtp
+        - s-nail
+      notify:
+        - restrict_mail
+        - freshclam_restart
+
+    - name: define Proxy for FreshClam
+      lineinfile:
+        dest: /etc/clamav/freshclam.conf
+        regexp: "^{{ item.key }}[ \t].*"
+        line: "{{ item.key }} {{ item.value }}"
+      with_items:
+        - { key: 'HTTPProxyServer', value: 'http://my-company.proxy.com' }
+        - { key: 'HTTPProxyPort', value: '8080' }
+      notify:
+        - freshclam_config
+        - freshclam_restart
+
+    - name: cleanup obsolete proxy definitions
+      lineinfile:
+        dest: /etc/clamav/freshclam.conf
+        state: absent
+        regexp: "{{ item }}"
+      with_items:
+        - 'HTTPProxyServer\s(?!http://my-company.proxy.com$).'
+        - 'HTTPProxyPort\s(?!8080$).'
+      notify:
+        - freshclam_config
+        - freshclam_restart
+
+    - name: Setting up Simple SMTP config...
+      lineinfile:
+        dest: /etc/ssmtp/ssmtp.conf
+        line: "{{item}}"
+      with_items:
+        - 'UseSTARTTLS=YES'
+        - 'FromLineOverride=no'
+
+    - name: Putting the weekly scan script
+      copy:
+        src: "files/clamscan_daily"
+        dest: /etc/cron.daily
+        owner: root
+        group: root
+        mode: 0755
+      notify: cron_restart
+    
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes
+
