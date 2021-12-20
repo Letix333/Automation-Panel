@@ -4,6 +4,7 @@
   force_handlers: true
   roles:
     - basic-repo
+    - basic-proxy
     - basic-unattended-upgrades
     - basic-certificates
     - basic-nfs

@@ -1,0 +1,38 @@
+---
+
+- block:
+  - name: add proxy definition to Environment
+    lineinfile:
+      path: /etc/environment
+      regexp: "{{item}}=.*"
+      line: "{{item}}={{proxy}}"
+    with_items:
+      - 'http_proxy'
+      - 'https_proxy'
+      - 'ftp_proxy'
+    vars:
+      proxy: 'http://my-company.proxy.com:8080'
+
+  - name: add proxy exceptions to Environment
+    lineinfile:
+      path: /etc/environment
+      regexp: ".*{{item}}=.*"
+      line: "{{item}}={{noproxy}}"
+    with_items:
+      - 'no_proxy'
+      - 'NO_PROXY'
+    vars:
+      noproxy: 'my-company.com,localhost'
+
+  - name: remove leftover obsolete proxy definitions from Environment
+    lineinfile:
+      path: /etc/environment
+      regexp: ".*{{item}}.*"
+      state: absent
+    with_items:
+      - 'old-proxy.com'
+      - 'very-old-proxy.com'
+
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes
