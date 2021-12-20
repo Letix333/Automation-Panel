@@ -3,6 +3,7 @@
 - hosts: standard
   force_handlers: true
   roles:
+    - basic-hostname
     - basic-repo
     - basic-proxy
     - basic-unattended-upgrades

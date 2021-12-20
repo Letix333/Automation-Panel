@@ -1,0 +1,15 @@
+---
+
+- block:
+  - name: Change entry in /etc/hosts
+    lineinfile:
+      path: /etc/hosts
+      regexp: '^127\.0\.1\.1'
+      line: "127.0.1.1       {{ inventory_hostname }}.mycompany-domain   {{ inventory_hostname }}"
+
+  - name: Change hostname
+    shell: hostnamectl set-hostname {{ inventory_hostname }}
+
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes
