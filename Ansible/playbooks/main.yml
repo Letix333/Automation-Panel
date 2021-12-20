@@ -1,0 +1,6 @@
+---
+
+- hosts: standard
+  force_handlers: true
+  roles:
+    - basic-unattended-upgrades

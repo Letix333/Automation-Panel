@@ -1,0 +1,10 @@
+---
+
+- name: upgrade_timer_restart
+  listen: configureUpdates
+  service:
+    name: apt-daily-upgrade.timer
+    state: restarted
+  when: ansible_os_family == "Debian"
+  become: yes
+
