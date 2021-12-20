@@ -1,0 +1,87 @@
+---
+
+- name: Installing system equipment packages 
+  block:
+    - name: Ubuntu desktop packages installation
+      apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: no
+      vars:
+        packages:
+          - ubuntu-minimal
+          - ubuntu-standard
+          - ubuntu-desktop
+
+    - name: Making sure the Xorg xserver is in the latest version
+      apt:
+        name: ['xserver-xorg','xserver-xorg-core']
+        state: latest
+
+    - name: install display manager packages
+      apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: no
+      vars:
+        packages:
+          - lightdm
+
+    - name: copy lightdm.conf file template
+      copy:
+        src: "files/lightdm.conf"
+        dest: /etc/lightdm/lightdm.conf
+        owner: root
+        group: root
+        mode: 0664
+
+    - name: fail2ban - ensure auth.log exists
+      copy:
+        dest: /var/log/auth.log
+        content: ''
+        force: no
+        mode: 0640
+        owner: syslog
+        group: adm
+
+    - name: Packages installation
+      apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: no
+      vars:
+        packages:
+        - xfce4
+        - xfce4-terminal
+        - mc
+        - doublecmd-gtk
+        - dstat
+        - htop
+        - nload
+        - traceroute
+        - net-tools
+        - default-jre
+        - synaptic
+        - gparted
+        - fail2ban
+        - git
+        - screen
+        - gimp
+        - minicom
+        - terminator
+        - vlc
+        - vlc-plugin*
+        - linphone
+        - firefox
+        - keepass2
+        - python3-pexpect
+        - cifs-utils
+        - xfsprogs
+        - vim
+        - curl
+
+      notify: TurningServiceOn
+
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes

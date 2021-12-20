@@ -1,0 +1,8 @@
+---
+
+- name: Enabling service
+  listen: TurningServiceOn
+  service:
+    name: fail2ban
+    state: started
+    enabled: yes
