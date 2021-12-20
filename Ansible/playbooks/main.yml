@@ -9,3 +9,4 @@
     - basic-nfs
     - basic-nss-certs
     - basic-ntp
+    - basic-ssh

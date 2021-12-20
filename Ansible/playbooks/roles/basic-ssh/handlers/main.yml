@@ -1,0 +1,8 @@
+---
+
+- name: restart sshd
+  listen: sshd-restart
+  service:
+    name: sshd
+    state: restarted
+  become: yes
