@@ -1,0 +1,53 @@
+---
+# ntp/tasks/main.yml
+
+- block:
+    - name: install ntp package Ubuntu systems
+      apt:
+        name: ntp
+        state: present
+        update_cache: no
+
+    - name: copy ntp.conf file template
+      template:
+        src: "ntp.conf.j2"
+        dest: /etc/ntp.conf
+        owner: root
+        group: root
+        mode: 0664
+      register: ntp_cfg_result
+
+    - name: copy localtime file for Ubuntu
+      file:
+        src: /usr/share/zoneinfo/{{ ntp_config_timezone }}
+        dest: /etc/localtime
+        force: yes
+        state: link
+
+    - name: enable ntp service
+      service:
+        name: ntp
+        enabled: yes
+      when: ntp_config_enabled == True
+
+  always:
+    - block:
+        - name: stop running ntpd
+          service:
+            name: ntp
+            state: stopped
+
+        - name: force time step
+          shell: /usr/sbin/ntpd -g -q
+
+        - name: start ntpd service
+          service:
+            name: ntp
+            state: restarted
+      when:
+        - ntp_cfg_result is defined
+        - ntp_cfg_result is changed
+
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes

@@ -1,0 +1,5 @@
+---
+ 
+ntp_config_enabled: True
+ntp_config_servers: [ "0.pl.pool.ntp.org", "1.pl.pool.ntp.org", "2.pl.pool.ntp.org" ]
+ntp_config_timezone: "Europe/Warsaw"

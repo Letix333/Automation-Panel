@@ -8,3 +8,4 @@
     - basic-certificates
     - basic-nfs
     - basic-nss-certs
+    - basic-ntp
