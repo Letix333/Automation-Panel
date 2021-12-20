@@ -1,0 +1,5 @@
+repo_arch: "{% if ansible_architecture == 'x86_64' -%}
+              [arch=amd64]
+            {%- endif %}"
+
+nvidia: '10de'

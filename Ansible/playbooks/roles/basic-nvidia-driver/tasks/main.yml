@@ -1,0 +1,40 @@
+---
+
+- block:
+    - name: install prerequitite packages
+      apt:
+        name: pciutils
+        update_cache: no
+
+    - name: check nvidia GPU presence
+      shell: |
+        lspci -d {{nvidia}}::0300 -n
+        lspci -d {{nvidia}}::0302 -n
+        lspci -d {{nvidia}}::0604 -n
+      changed_when: false
+      register: nvidia_pci
+
+    - block:
+        - name: ensure /usr/lib/nvidia exists
+          file:
+            path: /usr/lib/nvidia
+            state: directory
+            owner: root
+            group: root
+            mode: 0755
+
+        - name: install nvidia driver
+          apt:
+            name: "{{driver}}"
+            state: present
+            update_cache: no
+          vars:
+            device:       "{{ nvidia_pci.stdout_lines[0] | regex_replace('.*[^ ]:([0-9a-f]{4}).*', '\\1') }}"
+            drivers_dist: "{{ drivers[ansible_distribution_major_version] | default( drivers['default'] ) }}"
+            driver:       "{{ drivers_dist[device] | default( drivers_dist['default'] ) }}"
+      when:
+        - nvidia_pci.stdout is search(nvidia ~ ":")
+
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes
