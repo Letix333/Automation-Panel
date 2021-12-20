@@ -1,0 +1,27 @@
+---
+
+- block:
+    - name: copy certificate authority
+      copy:
+        src: '{{ item }}'
+        dest: /usr/local/share/ca-certificates/
+        owner: root
+        group: root
+        mode: 0644
+      with_fileglob:
+        files/ca-certificates/*
+      register: ca_certs_result
+
+  always:
+    - name: update certificates
+      shell: |
+        umask 0022
+        /usr/sbin/update-ca-certificates
+      when:
+        - ca_certs_result is defined
+        - ca_certs_result is changed
+
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes
+
