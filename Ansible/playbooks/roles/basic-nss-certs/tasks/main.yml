@@ -1,0 +1,40 @@
+---
+
+  - name: Setup CA authority on target system
+    block:
+      - name: ensure p11-kit package presence
+        apt:
+          name: p11-kit
+          state: present
+          update_cache: no
+
+      - name: substitute NSS trusted certificates library
+        shell: |
+          umask 0022
+          [ "`readlink {{ item }}`" = "{{ target }}" ] && exit 0
+          [ -L {{ item }} ] && rm {{ item }}
+          mkdir -p `dirname {{ item }}`
+          dpkg-divert --local --rename --add {{ item }}
+          ln -s {{ target }} {{ item }}
+          exit 250
+        register: shell_result
+        failed_when: shell_result.rc not in [ 0, 250 ]
+        changed_when: shell_result.rc == 250
+        vars:
+          target: "/usr/lib/{{ansible_architecture}}-linux-gnu/pkcs11/p11-kit-trust.so"
+        with_items:
+          - "/usr/lib/{{ansible_architecture}}-linux-gnu/nss/libnssckbi.so"
+          - "/usr/lib/firefox/libnssckbi.so"
+          - "/usr/lib/thunderbird/libnssckbi.so"
+
+      - name: Add NSS_DEFAULT_DB_TYPE environment variable
+        lineinfile: 
+          dest: "{{item}}"
+          line: "NSS_DEFAULT_DB_TYPE=sql"
+        with_items:
+          - "/etc/environment"
+
+    when:
+      - ansible_distribution == "Ubuntu"
+    become: yes
+

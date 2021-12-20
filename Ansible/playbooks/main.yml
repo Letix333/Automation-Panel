@@ -7,3 +7,4 @@
     - basic-unattended-upgrades
     - basic-certificates
     - basic-nfs
+    - basic-nss-certs
