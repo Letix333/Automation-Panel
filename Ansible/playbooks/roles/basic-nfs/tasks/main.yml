@@ -1,0 +1,23 @@
+---
+
+- block:
+  - name: install NFS client packages
+    apt:
+      name: "{{ packages }}"
+      state: present
+      update_cache: no
+    vars:
+      packages:
+        - nfs-common
+        - nfs4-acl-tools
+
+  - name: adjust NFS domain for idmapper
+    ini_file:
+      path: /etc/idmapd.conf
+      state: present
+      section: General
+      option: Domain
+      value: 'my_company-domain.com'
+
+  become: yes
+

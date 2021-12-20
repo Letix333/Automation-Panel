@@ -6,3 +6,4 @@
     - basic-repo
     - basic-unattended-upgrades
     - basic-certificates
+    - basic-nfs
