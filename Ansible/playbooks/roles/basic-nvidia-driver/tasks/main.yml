@@ -25,13 +25,9 @@
 
         - name: install nvidia driver
           apt:
-            name: "{{driver}}"
+            name: "nvidia-driver-450"
             state: present
             update_cache: no
-          vars:
-            device:       "{{ nvidia_pci.stdout_lines[0] | regex_replace('.*[^ ]:([0-9a-f]{4}).*', '\\1') }}"
-            drivers_dist: "{{ drivers[ansible_distribution_major_version] | default( drivers['default'] ) }}"
-            driver:       "{{ drivers_dist[device] | default( drivers_dist['default'] ) }}"
       when:
         - nvidia_pci.stdout is search(nvidia ~ ":")
 
