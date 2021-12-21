@@ -1,0 +1,46 @@
+---
+- name: Setup system users
+  block:
+
+    - name: Create service account
+      user:
+        name: service
+        createhome: yes
+        password: $1$40iljWr1$UpJRPFYxXNaYuyfT66.wK/ 
+        shell: /bin/bash
+
+    - name: Add sudo privileges
+      lineinfile:
+        dest: /etc/sudoers
+        regexp: '^service\s'
+        line: 'service ALL = NOPASSWD: ALL'
+        insertafter: '^(root .*)'
+        state: present
+
+    - name: Remove no longer needed local-sudoers file
+      file:
+        path: /etc/sudoers.d/local-sudoers
+        state: absent
+
+    - name: Putting necessary authorised keys for clientconfigmgr
+      authorized_key:
+        user: service
+        key: |
+          {{ lookup('file', 'main.keys') }}
+        state: present
+        exclusive: True
+
+    - name: Create user account
+      user:
+        name: user
+        createhome: yes
+        password: $1$40iljWr1$UpJRPFYxXNaYuyfT66.wK/
+        shell: /bin/bash
+
+    - name: Expire user's password
+      shell: passwd -e user
+
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes
+

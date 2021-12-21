@@ -4,6 +4,7 @@
   force_handlers: true
   roles:
     - basic-hostname
+    - basic-users
     - basic-repo
     - basic-proxy
     - basic-unattended-upgrades
