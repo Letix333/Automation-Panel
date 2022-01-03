@@ -1,0 +1,49 @@
+---
+
+- block:
+  - name: Create docker repository definition
+    template:
+      src: '{{item}}.list.j2'
+      dest: '/etc/apt/sources.list.d/{{item}}.list'
+      owner: root
+      group: root
+      mode: 0644
+    with_items:
+      - docker
+    when: ansible_os_family == "Debian"
+    register: repo_definition
+    vars:
+      architecture: "{% if ansible_architecture in ['aarch64', 'armv7l'] %}arm64{% elif ansible_architecture == 'x86_64' %}amd64{% endif %}"
+
+  - name: Adding Docker GPG keys
+    apt_key:
+      id: 0EBFCD88
+      data: "{{ lookup('file', 'docker.asc') }}"
+      state: present
+
+  - name: Update package information
+    apt:
+      update_cache: yes
+    when: repo_definition is changed
+
+  - name: Install docker packages
+    apt:
+      name: "{{packages}}"
+      update_cache: no
+    vars:
+      packages:
+        - docker-ce
+
+  - name: Check if user exits
+    shell: id PLACE_FOR_FUTURE_USER 2> /dev/null
+    register: user_account
+    failed_when: user_account.rc not in [ 0, 1 ]
+
+  - name: Add user to docker group
+    user:
+      name: PLACE_FOR_FUTURE_USER
+      groups: docker
+      append: yes
+    when: user_account.stdout != ""
+
+  become: yes
