@@ -1,0 +1,34 @@
+---
+
+- block:
+    - name: Create Teams repository definition
+      template:
+        src: '{{item}}.list.j2'
+        dest: '/etc/apt/sources.list.d/{{item}}.list'
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - teams
+      register: repo_definition
+
+    - name: Add Microsoft GPG key
+      apt_key:
+        id: EB3E94ADBE1229CF
+        data: "{{ lookup('file', 'microsoft.asc') }}"
+        state: present
+
+    - name: Update package information
+      apt:
+        update_cache: yes
+      when: repo_definition is changed
+
+    - name: Install Teams
+      apt:
+        name: teams
+        state: present
+        update_cache: no
+
+  become: yes
+  when:
+    - ansible_distribution == "Ubuntu"
