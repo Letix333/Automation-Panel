@@ -30,5 +30,12 @@
   force_handlers: true
   roles:
     - advanced-java-env
-      #    - advanced-vscode
+    - advanced-vscode
+    - advanced-beyond-compare
+
+- hosts: azure_developer
+  force_handlers: true
+  roles:
+    - advanced-azure-cli
+    - advanced-vscode
     - advanced-beyond-compare
