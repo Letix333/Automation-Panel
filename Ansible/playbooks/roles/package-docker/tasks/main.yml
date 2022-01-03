@@ -34,14 +34,14 @@
       packages:
         - docker-ce
 
-  - name: Check if user exits
-    shell: id PLACE_FOR_FUTURE_USER 2> /dev/null
+  - name: "Check if user: {{ USER }} exits"
+    shell: id {{ USER }} 2> /dev/null
     register: user_account
     failed_when: user_account.rc not in [ 0, 1 ]
 
   - name: Add user to docker group
     user:
-      name: PLACE_FOR_FUTURE_USER
+      name: "{{ USER }}"
       groups: docker
       append: yes
     when: user_account.stdout != ""

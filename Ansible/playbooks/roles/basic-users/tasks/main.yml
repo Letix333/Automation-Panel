@@ -30,15 +30,15 @@
         state: present
         exclusive: True
 
-    - name: Create user account
+    - name: "Create {{ USER }}  account"
       user:
-        name: user
+        name: "{{ USER }}"
         createhome: yes
-        password: $1$40iljWr1$UpJRPFYxXNaYuyfT66.wK/
+        password: $1$QgUjiROT$SaGOWrdfeoSGdljDwKqYh1
         shell: /bin/bash
 
     - name: Expire user's password
-      shell: passwd -e user
+      shell: passwd -e {{ USER }}
 
   when:
     - ansible_distribution == "Ubuntu"
