@@ -1,0 +1,35 @@
+---
+
+- block:
+    - name: Create MS Visual Studio Code repository definition
+      template:
+        src: '{{item}}.list.j2'
+        dest: '/etc/apt/sources.list.d/{{item}}.list'
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - vscode
+      register: repo_definition
+
+    - name: Add Microsoft GPG key
+      apt_key:
+        id: EB3E94ADBE1229CF
+        data: "{{ lookup('file', 'microsoft.asc') }}"
+        state: present
+
+    - name: Update package information
+      apt:
+        update_cache: yes
+      when: repo_definition is changed
+
+    - name: Install MS Visual Studio Code
+      apt:
+        name: code
+        state: present
+        update_cache: no
+
+
+  become: yes
+  when:
+    - ansible_distribution == "Ubuntu"

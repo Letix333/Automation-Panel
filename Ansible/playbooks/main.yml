@@ -30,3 +30,4 @@
   force_handlers: true
   roles:
     - advanced-java-env
+    - advanced-vscode
