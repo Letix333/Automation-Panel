@@ -30,4 +30,5 @@
   force_handlers: true
   roles:
     - advanced-java-env
-    - advanced-vscode
+      #    - advanced-vscode
+    - advanced-beyond-compare
