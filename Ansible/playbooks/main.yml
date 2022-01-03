@@ -25,3 +25,8 @@
     - advanced-rnd
     - advanced-git
     - advanced-sumo
+
+- hosts: java_developer
+  force_handlers: true
+  roles:
+    - advanced-java-env
