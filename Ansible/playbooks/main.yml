@@ -32,6 +32,7 @@
     - advanced-java-env
     - advanced-vscode
     - advanced-beyond-compare
+    - advanced-git  
 
 - hosts: azure_developer
   force_handlers: true
@@ -39,3 +40,4 @@
     - advanced-azure-cli
     - advanced-vscode
     - advanced-beyond-compare
+    - advanced-git
