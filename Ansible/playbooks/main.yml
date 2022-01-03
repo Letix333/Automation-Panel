@@ -18,3 +18,8 @@
     - basic-equipment
     - basic-nvidia-driver
     - basic-upgrade
+
+- hosts: rnd
+  force_handlers: true
+  roles:
+    - advanced-rnd

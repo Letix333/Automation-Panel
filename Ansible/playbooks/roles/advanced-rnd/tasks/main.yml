@@ -1,0 +1,65 @@
+---
+
+- block:
+    - name: install python packages
+      apt:
+        name: "{{packages}}"
+        update_cache: no
+      vars:
+        packages:
+          - cython3
+          - python3-git*
+          - python3-matplotlib
+          - python3-numpy
+          - python3-progressbar
+          - python3-pygit2
+          - python3-scipy
+
+
+    - name: install RnD packages
+      apt:
+        name: "{{packages}}"
+        update_cache: no
+      vars:
+        packages:
+          - build-essential
+          - cmake
+          - doxygen
+          - flex
+          - gcc-mingw-w64
+          - octave
+          - protobuf-compiler
+          - scilab
+
+
+    - name: install development/api packages and librarys
+      apt:
+        name: "{{packages}}"
+        update_cache: no
+      vars:
+        packages:
+          - libboost-all-dev
+          - libfcl-dev
+          - libgoogle-glog-dev
+          - libhdf5-dev
+          - libogre-1.9-dev
+          - libopenblas-dev
+          - libopencv-dev
+          - libturbojpeg
+
+    - name: install utilities tools
+      apt:
+        name: "{{packages}}"
+        update_cache: no
+      vars:
+        packages:
+          - dash
+          - gimp
+          - htop
+          - minicom
+          - sshfs
+
+
+  when:
+    - ansible_distribution == "Ubuntu"
+  become: yes
