@@ -1,0 +1,18 @@
+---
+
+- block: 
+  - name: Update package information
+    apt:
+      update_cache: yes
+
+  - name: install git packages
+    apt:
+      name: "{{packages}}"
+      update_cache: no
+    vars:
+      packages:
+        - git
+        - git-gui
+        - gitk
+
+  become: yes

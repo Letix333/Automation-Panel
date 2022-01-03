@@ -23,3 +23,4 @@
   force_handlers: true
   roles:
     - advanced-rnd
+    - advanced-git
