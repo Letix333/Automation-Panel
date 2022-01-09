@@ -1,3 +1,26 @@
+<?php
+	session_start();
+	if (isset($_POST['hostname']))
+	{
+		$flag=true;
+
+		$hostname=$_POST['hostname'];
+		if ((strlen($hostname)<5) || (strlen($hostname)>10))
+		{
+			$flag=false;
+			$_SESSION['error_hostname']="Nazwa maszyny składa się zawsze z 5-10 znaków. Sprawdź poprawność nazwy maszyny.";
+		}
+		$hostname=$_POST['user'];
+                if ((strlen($hostname)<5) || (strlen($hostname)>10))
+                {
+                        $flag=false;
+                        $_SESSION['error_user']="Nazwa użytkownika składa się zawsze z 5-10 znaków. Sprawdź poprawność nazwy użytkownika.";
+                }
+
+	}
+?>
+
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -48,7 +71,25 @@
 					
 					<div class="row">
 						<div><label> Nazwa użytkownika <input type="text" name="user" placeholder="Jak user ma być utworzony?"></label></div>
+						<div class="error">
+                                                <?php
+                                                if (isset($_SESSION['error_user']))
+                                                {
+                                                        echo $_SESSION['error_user'];
+                                                        unset($_SESSION['error_user']);
+                                                }
+                                                ?>
+                                                </div>
 						<div><label> Nazwa maszyny <input type="text" name="hostname"></label></div>
+						<div class="error">
+						<?php
+						if (isset($_SESSION['error_hostname']))
+						{	
+							echo $_SESSION['error_hostname'];
+							unset($_SESSION['error_hostname']);
+						}
+						?>
+						</div>
 					</div>
 				
 					<div class="row">
