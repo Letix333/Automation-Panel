@@ -15,7 +15,12 @@
                 {
                         $flag=false;
                         $_SESSION['error_user']="Nazwa użytkownika składa się zawsze z 5-10 znaków. Sprawdź poprawność nazwy użytkownika.";
-                }
+		}
+
+
+
+
+		$_SESSION['flag']=$flag;
 
 	}
 ?>
@@ -99,6 +104,27 @@
 			</form>		
 			
 		</article>
+		<?php
+                	if (isset($flag))
+			{
+				if ($_SESSION['flag'] == true )
+				{	
+					echo "printing <br />";	
+					echo $_POST['hostname']."<br />";
+					echo $_POST['user']."<br />";
+					echo $_POST['conf_type']."<br />";
+					echo $_POST['docker']."<br />";
+					echo $_POST['teams']."<br />";
+					shell_exec('whoami >> /tmp/test');
+					chdir("ansible");
+					$output = shell_exec("ls -la");
+					echo "<pre>$output</pre>";
+				}
+                                unset($_SESSION['flag']);
+                        }
+                ?>
+
+
 		
 	</main>
 
