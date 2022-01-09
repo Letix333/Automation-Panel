@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+
+	<meta charset="utf-8">
+	<title>Platforma do automatyzacji</title>
+	<meta name="description" content="Platforma do automatyzacji urządzeń z systemem Linux">
+	<meta name="author" content="Bartłomiej Olczyk">
+	<link rel="stylesheet" href="css/main.css">
+
+
+</head>
+
+<body>
+
+	<header>
+		<img src="img/logo.png">
+		<h1>Wybierz swoją konfigurację:</h1>
+
+	</header>
+	
+	<main>
+	
+		<article>
+		
+			<form method="post">
+				<div id="container">
+					<div class="row">
+						<fieldset>
+							<legend> Rodzaj konfiguracji: </legend>
+							<div><label><input type="radio" value="standard" name="conf_type" checked> Standard </label></div>
+							<div><label><input type="radio" value="rnd" name="conf_type"> RnD </label></div>
+							<div><label><input type="radio" value="java_developer" name="conf_type"> Java Developer </label></div>						
+							<div><label><input type="radio" value="azure_developer" name="conf_type"> Azure Developer </label></div>
+						</fieldset>
+					
+					</div>				
+					<div class="row">
+						<fieldset>
+							<legend> Dodatkowe oprogramowanie </legend>
+							<div class="row">
+								<div><label><input type="checkbox" name="docker" value="1"> Docker </label></div>
+								<div><label><input type="checkbox" name="teams" value="1"> Microsoft Teams </label></div>
+							</div>
+						</fieldset>
+					
+					</div>
+					
+					<div class="row">
+						<div><label> Nazwa użytkownika <input type="text" name="user" placeholder="Jak user ma być utworzony?"></label></div>
+						<div><label> Nazwa maszyny <input type="text" name="hostname"></label></div>
+					</div>
+				
+					<div class="row">
+						<input type="submit" value="Start">
+					</div>
+				</div>
+			</form>		
+			
+		</article>
+		
+	</main>
+
+</body>
+</html>

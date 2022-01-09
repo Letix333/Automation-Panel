@@ -1,0 +1,36 @@
+body
+{
+	margin: 0;
+	padding: 0px 60px;
+	background-color: #B8E5EB;
+	color: #000000;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 17px;
+
+}
+
+h1
+{
+	font-size: 50px;
+	font-weight: 400;
+	color: #EB5504;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+#container
+{
+	width: 1000px;
+	margin-left:auto;
+	margin-right: auto;
+}
+.row
+{
+	margin: 20px 10px;
+}
+
+.col
+{
+	display: inline-block;
+	margin: 0 10px;
+}
