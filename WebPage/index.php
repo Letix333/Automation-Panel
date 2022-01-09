@@ -111,13 +111,12 @@
 				{	
 					echo "printing <br />";	
 					echo $_POST['hostname']."<br />";
+					$hostname= $_POST['hostname'];
 					echo $_POST['user']."<br />";
 					echo $_POST['conf_type']."<br />";
 					echo $_POST['docker']."<br />";
 					echo $_POST['teams']."<br />";
-					shell_exec('whoami >> /tmp/test');
-					chdir("ansible");
-					$output = shell_exec("ls -la");
+					$output = shell_exec("/var/www/html/scripts/test.sh 2>&1");
 					echo "<pre>$output</pre>";
 				}
                                 unset($_SESSION['flag']);
