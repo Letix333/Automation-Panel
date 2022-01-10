@@ -47,3 +47,5 @@
     when: user_account.stdout != ""
 
   become: yes
+  when:
+    - docker_var is defined

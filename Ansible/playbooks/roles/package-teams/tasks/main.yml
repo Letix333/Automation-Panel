@@ -32,3 +32,4 @@
   become: yes
   when:
     - ansible_distribution == "Ubuntu"
+    - teams_var is defined

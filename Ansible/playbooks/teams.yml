@@ -1,6 +1,0 @@
----
-
-- hosts: all
-  force_handlers: true
-  roles:
-    - package-teams

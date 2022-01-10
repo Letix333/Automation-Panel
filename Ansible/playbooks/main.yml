@@ -18,6 +18,8 @@
     - basic-equipment
     - basic-nvidia-driver
     - basic-upgrade
+    - package-docker
+    - package-teams
 
 - hosts: rnd
   force_handlers: true
