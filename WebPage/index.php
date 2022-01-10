@@ -50,9 +50,8 @@
 	<main>
 	
 		<article>
-		
-			<form method="post">
-				<div id="container">
+			<div id="container">	
+				<form method="post">
 					<div class="row">
 						<fieldset>
 							<legend> Rodzaj konfiguracji: </legend>
@@ -100,23 +99,30 @@
 					<div class="row">
 						<input type="submit" value="Start">
 					</div>
-				</div>
-			</form>		
-			
+				</form>		
+			</div>	
 		</article>
 		<?php
-                	if (isset($flag))
+                	if (isset($_SESSION['flag']))
 			{
 				if ($_SESSION['flag'] == true )
 				{	
 					echo "printing <br />";	
-					echo $_POST['hostname']."<br />";
-					$hostname= $_POST['hostname'];
-					echo $_POST['user']."<br />";
-					echo $_POST['conf_type']."<br />";
-					echo $_POST['docker']."<br />";
-					echo $_POST['teams']."<br />";
-					$output = shell_exec("/var/www/html/scripts/test.sh 2>&1");
+					$hostname=$_POST['hostname'];
+					$user=$_POST['user'];
+					$conf= $_POST['conf_type'];
+					if ($_POST['docker'] == true)
+					{
+					$output = shell_exec("/var/www/html/scripts/packages.sh $hostname 'docker_var' 2>&1");
+                                        echo "<pre>$output</pre>";
+					}
+					if ($_POST['teams'] == true)
+					{
+					$output = shell_exec("/var/www/html/scripts/packages.sh $hostname 'teams_var' 2>&1");
+                                        echo "<pre>$output</pre>";
+					}
+					//Dodawanie do inventory
+					$output = shell_exec("/var/www/html/scripts/test.sh $user $hostname $conf 2>&1");
 					echo "<pre>$output</pre>";
 				}
                                 unset($_SESSION['flag']);
